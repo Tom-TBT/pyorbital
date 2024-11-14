@@ -4,8 +4,9 @@
 
 # %% auto 0
 __all__ = ['ASTRO_UNIT', 'LIGHT_YEAR', 'PARSEC', 'SOLAR_DAY', 'SIDERAL_DAY', 'TROPICAL_YEAR', 'SIDERAL_YEAR', 'ANOMALISTIC_YEAR',
-           'DRACONIC_YEAR', 'JULIAN_YEAR', 'GALACTIC_YEAR', 'dms_to_decimal', 'decimal_to_dms', 'is_leap_year',
-           'is_gregorian', 'date_to_julian', 'julian_to_date', 'day_into_year', 'day_into_year_to_date']
+           'DRACONIC_YEAR', 'JULIAN_YEAR', 'GALACTIC_YEAR', 'timezone_d', 'dms_to_decimal', 'decimal_to_dms',
+           'is_leap_year', 'is_gregorian', 'date_to_julian', 'julian_to_date', 'day_into_year', 'day_into_year_to_date',
+           'day_of_week', 'lct_to_ut', 'ut_to_lct', 'gst_to_lst', 'lst_to_gst']
 
 # %% ../nbs/01_conversion.ipynb 2
 import math
@@ -33,7 +34,7 @@ def dms_to_decimal(degree, minute, second, sign):
     degree = abs(degree)
     minute += second / 60
     decimal = degree + (minute / 60)
-    return round(decimal * sign, 4)
+    return decimal * sign
 
 def decimal_to_dms(decimal):
     """
@@ -42,21 +43,21 @@ def decimal_to_dms(decimal):
     sign = -1 if decimal < 0 else 1
     decimal = abs(decimal)
     degree = int(decimal)
-    frac, _ = math.modf(decimal)
+    frac = math.modf(decimal)[0]
     frac *= 60
     minute = int(frac)
-    frac, _ = math.modf(frac)
+    frac = math.modf(frac)[0]
     second = 60 * frac
-    return degree, minute, round(second, 4), sign
+    return degree, minute, second, sign
 
-# %% ../nbs/01_conversion.ipynb 7
+# %% ../nbs/01_conversion.ipynb 6
 def is_leap_year(year):
     return (year % 4 == 0) and ((year % 100 != 0) or (year % 400 == 0))
 
 def is_gregorian(year, month, day):
     return (year > 1582) or (year == 1582 and ((month > 10) or (month == 10 and day > 14)))
 
-# %% ../nbs/01_conversion.ipynb 9
+# %% ../nbs/01_conversion.ipynb 8
 def date_to_julian(year, month, day):
     """
     Conversion from Calendar date to Julian day (note that the day can be expressed in decimal with `dms_to_decimal`)).
@@ -80,7 +81,7 @@ def julian_to_date(julian_day):
     """
     julian_day += 0.5
     i = int(julian_day)
-    f, _ = math.modf(julian_day)
+    f = math.modf(julian_day)[0]
     b = i
     if i > 2299160:
         a = int((i - 1867216.25)/36524.25)
@@ -95,7 +96,7 @@ def julian_to_date(julian_day):
     year = d - 4716 if month > 2.5 else d - 4715
     return year, month, day
 
-# %% ../nbs/01_conversion.ipynb 11
+# %% ../nbs/01_conversion.ipynb 10
 def day_into_year(year, month, day):
     t = 1 if is_leap_year(year) else 2
     return int(275 * month / 9) - (t * int((month + 9) / 12)) + day - 30
@@ -108,3 +109,94 @@ def day_into_year_to_date(year, days):
     month = e - 1 if e < 13.5 else e - 13
     day = c - int(e * 30.6001)
     return year, month, day   
+
+# %% ../nbs/01_conversion.ipynb 12
+def day_of_week(year, month, day):
+    """
+    Gives back which day was the given date. 0: sunday, 1: monday, ...
+    """
+    day = int(day)
+    jd = date_to_julian(year, month, day)
+    a = (jd + 1.5) / 7
+    b = 7 * math.modf(a)[0]
+    return round(b)
+
+# %% ../nbs/01_conversion.ipynb 14
+timezone_d = {
+    "cet": 1,
+    "est": -5,
+    "cst": -6,
+    "mst": -7,
+    "pst": -8
+}
+def lct_to_ut(hour, minute, second, timezone, daylight_saving_time=False):
+    """
+    Local civil time to universal time
+    """
+    dec = dms_to_decimal(hour, minute, second, 1)
+    if daylight_saving_time:
+        dec -= 1
+    dec -= timezone_d[timezone]
+    return decimal_to_dms((dec + 24) % 24)
+
+def ut_to_lct(hour, minute, second, timezone, daylight_saving_time=False):
+    """
+    Universal time to local civil time
+    """
+    dec = dms_to_decimal(hour, minute, second, 1)
+    dec += timezone_d[timezone]
+    dec = (dec + 24) % 24
+    if daylight_saving_time:
+        dec += 1
+    return decimal_to_dms((dec + 24) % 24)
+
+# %% ../nbs/01_conversion.ipynb 16
+def ut_to_lct(year, month, day, hour, minute, second):
+    """
+    Universal time to Greenwitch standard time
+    """
+    jd = date_to_julian(year, month, day)
+    jd0 = date_to_julian(year, 1, 0)
+    days = jd - jd0
+    t = (jd0 - 2415020) / 36525
+    r = 6.6460656 + 2400.051262 * t + 0.00002581 ** t 
+    b = 24 - r + 24 * (year - 1900)
+    t0 = 0.0657098 * days - b
+    ut = dms_to_decimal(hour, minute, second, 1)
+    gst = t0 + 1.002738 * ut
+    return decimal_to_dms((gst + 24) % 24)
+
+def lct_to_ut(year, month, day, hour, minute, second):
+    """
+    Greenwitch standard time to universal time.
+    """
+    jd = date_to_julian(year, month, day)
+    jd0 = date_to_julian(year, 1, 0)
+    days = jd - jd0
+    t = (jd0 - 2415020) / 36525
+    r = 6.6460656 + 2400.051262 * t + 0.00002581 ** t 
+    b = 24 - r + 24 * (year - 1900)
+    t0 = 0.0657098 * days - b
+    t0 = (t0 + 24) % 24
+    gst = dms_to_decimal(hour, minute, second, 1)
+    a = gst - t0
+    a = (a + 24) % 24
+    ut = 0.99727 * a
+    return decimal_to_dms((ut + 24) % 24)
+
+# %% ../nbs/01_conversion.ipynb 18
+def gst_to_lst(hour, minute, second, longitude):
+    """
+    longitude: 40E is +40, 40W is -40
+    """
+    gst = dms_to_decimal(hour, minute, second, 1)
+    lst = gst + (longitude / 15)
+    return decimal_to_dms((lst + 24) % 24)
+
+def lst_to_gst(hour, minute, second, longitude):
+    """
+    longitude: 40E is +40, 40W is -40
+    """
+    lst = dms_to_decimal(hour, minute, second, 1)
+    gst = lst - (longitude / 15)
+    return decimal_to_dms((gst + 24) % 24)
