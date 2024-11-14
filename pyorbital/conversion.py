@@ -4,7 +4,8 @@
 
 # %% auto 0
 __all__ = ['ASTRO_UNIT', 'LIGHT_YEAR', 'PARSEC', 'SOLAR_DAY', 'SIDERAL_DAY', 'TROPICAL_YEAR', 'SIDERAL_YEAR', 'ANOMALISTIC_YEAR',
-           'DRACONIC_YEAR', 'JULIAN_YEAR', 'GALACTIC_YEAR', 'dms_to_decimal', 'decimal_to_dms', 'is_leap_year']
+           'DRACONIC_YEAR', 'JULIAN_YEAR', 'GALACTIC_YEAR', 'dms_to_decimal', 'decimal_to_dms', 'is_leap_year',
+           'is_gregorian', 'date_to_julian', 'julian_to_date', 'day_into_year', 'day_into_year_to_date']
 
 # %% ../nbs/01_conversion.ipynb 2
 import math
@@ -48,6 +49,62 @@ def decimal_to_dms(decimal):
     second = 60 * frac
     return degree, minute, round(second, 4), sign
 
-# %% ../nbs/01_conversion.ipynb 6
+# %% ../nbs/01_conversion.ipynb 7
 def is_leap_year(year):
     return (year % 4 == 0) and ((year % 100 != 0) or (year % 400 == 0))
+
+def is_gregorian(year, month, day):
+    return (year > 1582) or (year == 1582 and ((month > 10) or (month == 10 and day > 14)))
+
+# %% ../nbs/01_conversion.ipynb 9
+def date_to_julian(year, month, day):
+    """
+    Conversion from Calendar date to Julian day (note that the day can be expressed in decimal with `dms_to_decimal`)).
+    """
+    assert 1 <= month <= 12
+    if month <= 2:
+        year -= 1
+        month += 12
+    t = 0.75 if year < 0 else 0
+    
+    a, b = 0, 0
+    if is_gregorian(year, month, day):
+        a = int(year/100)
+        b = 2 - a + int(a/4)
+        
+    return b + int(365.25 * year - t) + int(30.6001 * (month + 1)) + day + 1720994.5
+
+def julian_to_date(julian_day):
+    """
+    Conversion from Julian day to Calendar date.
+    """
+    julian_day += 0.5
+    i = int(julian_day)
+    f, _ = math.modf(julian_day)
+    b = i
+    if i > 2299160:
+        a = int((i - 1867216.25)/36524.25)
+        b = i + 1 + a - int(a/4)
+    c = b + 1524
+    d = int((c - 122.1)/365.25)
+    e = int(365.25 * d)
+    g = int((c - e)/30.6001)
+    
+    day = c - e + f - int(30.6001 * g)
+    month = g - 1 if g < 13.5 else g - 13
+    year = d - 4716 if month > 2.5 else d - 4715
+    return year, month, day
+
+# %% ../nbs/01_conversion.ipynb 11
+def day_into_year(year, month, day):
+    t = 1 if is_leap_year(year) else 2
+    return int(275 * month / 9) - (t * int((month + 9) / 12)) + day - 30
+
+def day_into_year_to_date(year, days):
+    a = 1523 if is_leap_year(year) else 1889
+    b = int((days + a - 122.1) / 365.25)
+    c = days + a - int(b * 365.25)
+    e = int(c / 30.6001)
+    month = e - 1 if e < 13.5 else e - 13
+    day = c - int(e * 30.6001)
+    return year, month, day   
