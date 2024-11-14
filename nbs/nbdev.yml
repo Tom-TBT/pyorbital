@@ -1,0 +1,9 @@
+project:
+  output-dir: _docs
+
+website:
+  title: "pyorbital"
+  site-url: "https://Tom-TBT.github.io/pyorbital"
+  description: "Library to compute the orbits of our solar system's planets"
+  repo-branch: main
+  repo-url: "https://github.com/Tom-TBT/pyorbital"
