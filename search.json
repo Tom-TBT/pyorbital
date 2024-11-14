@@ -1,0 +1,72 @@
+[
+  {
+    "objectID": "orbit.html",
+    "href": "orbit.html",
+    "title": "orbit",
+    "section": "",
+    "text": "source\n\ndistance\n\n distance (true_anomaly, semi_maj_axis, eccentricity)\n\ntrue_anomaly: radians semi_maj_axis: ellipse’s semi major axis eccentricity: ellipse’s eccentricity\n\nplt.figure()\nplt.plot(np.linspace(0, np.pi*2, 100), distance(np.linspace(0, np.pi*2, 100), 40000, 0.5))\nplt.xlabel(\"true_anomaly (rad)\")\nplt.ylabel(\"distance\")\nplt.suptitle(f\"semi_maj_axis: {40000}   eccentricity: {0.5}\")\n\nText(0.5, 0.98, 'semi_maj_axis: 40000   eccentricity: 0.5')\n\n\n\n\n\n\n\n\n\n\nassert distance(np.pi, 40000, 0.5) == 60000\nassert distance(np.pi*2, 40000, 0.5) == 20000\nassert distance(np.pi/4, 40000, 0.5) == 22163.883751087757\nassert len(distance(np.arange(4568), 40000, 0.5)) == 4568  # Can provide true_anomaly as 1D array\n\n\nsource\n\n\ndays_since_perihelion\n\n days_since_perihelion (mean_anomaly, orbit_duration)\n\ndays: number of days since last perihelion orbit_duration: duration of an orbit in days\n\nsource\n\n\nmean_anomaly\n\n mean_anomaly (days, orbit_duration)\n\ndays: number of days since last perihelion orbit_duration: duration of an orbit in days\n\nplt.figure()\nplt.plot(np.arange(100), mean_anomaly(np.arange(100), 100))\nplt.xlabel(\"number of days since last perihelion\")\nplt.ylabel(\"mean_anomaly\")\nplt.suptitle(f\"orbit_duration: {100} days\")\n\nText(0.5, 0.98, 'orbit_duration: 100')\n\n\n\n\n\n\n\n\n\n\nplt.figure()\nplt.plot(np.linspace(0, np.pi * 2, 100), days_since_perihelion(np.linspace(0, np.pi * 2, 100), 100))\nplt.xlabel(\"mean_anomaly\")\nplt.ylabel(\"number of days since last perihelion\")\nplt.suptitle(f\"orbit_duration: {100} days\")\n\nText(0.5, 0.98, 'orbit_duration: 100 days')\n\n\n\n\n\n\n\n\n\n\nassert mean_anomaly(300.25, 686.97) * 180 / np.pi == 157.34311541988734\nassert days_since_perihelion(np.pi, 100) == 50\n\n\nsource\n\n\nequation_of_center_true_anomally\n\n equation_of_center_true_anomally (true_anomaly, eccentricity)\n\nEc = trueAnomally - meanAnomally\n\nsource\n\n\nequation_of_center_mean_anomally\n\n equation_of_center_mean_anomally (mean_anomaly, eccentricity)\n\nEc = trueAnomally - meanAnomally\n\nsource\n\n\neccentric_anomally_inv\n\n eccentric_anomally_inv (true_anomally, eccentricity)\n\n\nsource\n\n\ntrue_anomally\n\n true_anomally (eccentric_anomaly, eccentricity)\n\n\nassert true_anomally(np.pi/4, 0.5) == 1.2446686345053115\nassert eccentric_anomally_inv(1.2446686345053115, 0.5) == 0.7853981633974482  # almost pi/4\n\n\neccentricity = .8\nplt.figure()\nplt.plot(np.linspace(-np.pi, np.pi, 100), true_anomally(np.linspace(-np.pi, np.pi, 100), eccentricity), label=\"true anomally\")\nplt.plot(np.linspace(-np.pi, np.pi, 100), eccentric_anomally_inv(np.linspace(-np.pi, np.pi, 100), eccentricity), label=\"eccentric anomally\")\nplt.ylabel(\"radian\")\nplt.suptitle(f\"eccentricity: {eccentricity}\")\nplt.legend()\n\n\n\n\n\n\n\n\n\nsource\n\n\neccentric_anomally\n\n eccentric_anomally (mean_anomally, eccentricity, precision=1e-06,\n                     method='newton-raphson')\n\nmethod: kepler or newton-raphson",
+    "crumbs": [
+      "orbit"
+    ]
+  },
+  {
+    "objectID": "index.html",
+    "href": "index.html",
+    "title": "pyorbital",
+    "section": "",
+    "text": "This file will become your README and also the index of your documentation.",
+    "crumbs": [
+      "pyorbital"
+    ]
+  },
+  {
+    "objectID": "index.html#developer-guide",
+    "href": "index.html#developer-guide",
+    "title": "pyorbital",
+    "section": "Developer Guide",
+    "text": "Developer Guide\nIf you are new to using nbdev here are some useful pointers to get you started.\n\nInstall pyorbital in Development mode\n# make sure pyorbital package is installed in development mode\n$ pip install -e .\n\n# make changes under nbs/ directory\n# ...\n\n# compile to have changes apply to pyorbital\n$ nbdev_prepare",
+    "crumbs": [
+      "pyorbital"
+    ]
+  },
+  {
+    "objectID": "index.html#usage",
+    "href": "index.html#usage",
+    "title": "pyorbital",
+    "section": "Usage",
+    "text": "Usage\n\nInstallation\nInstall latest from the GitHub repository:\n$ pip install git+https://github.com/Tom-TBT/pyorbital.git\nor from conda\n$ conda install -c Tom-TBT pyorbital\nor from pypi\n$ pip install pyorbital\n\n\nDocumentation\nDocumentation can be found hosted on this GitHub repository’s pages. Additionally you can find package manager specific guidelines on conda and pypi respectively.",
+    "crumbs": [
+      "pyorbital"
+    ]
+  },
+  {
+    "objectID": "index.html#how-to-use",
+    "href": "index.html#how-to-use",
+    "title": "pyorbital",
+    "section": "How to use",
+    "text": "How to use\nFill me in please! Don’t forget code examples:\n\n1+1\n\n2",
+    "crumbs": [
+      "pyorbital"
+    ]
+  },
+  {
+    "objectID": "core.html",
+    "href": "core.html",
+    "title": "core",
+    "section": "",
+    "text": "source\n\nsay_hello\n\n say_hello (to)\n\nSay hello to somebody\n\nassert say_hello(\"Hamel\") == \"Hello Hamel!\"\n\n'Hello Isaac!'\n\n\n\nsource\n\n\nHelloSayer\n\n HelloSayer (to)\n\nSay hello to to using say_hello",
+    "crumbs": [
+      "core"
+    ]
+  },
+  {
+    "objectID": "conversion.html",
+    "href": "conversion.html",
+    "title": "conversion",
+    "section": "",
+    "text": "source\n\ndecimal_to_dms\n\n decimal_to_dms (decimal)\n\nConversion from decimal format (e.g. 15.7025) to DMS format (e.g. 15°42’9”).\n\nsource\n\n\ndms_to_decimal\n\n dms_to_decimal (degree, minute, second, sign)\n\nConversion from DMS format (e.g. 15°42’9”) to decimal format (e.g. 15.7025).\n\nassert dms_to_decimal(15, 42, 9, 1) == 15.7025\nassert decimal_to_dms(15.7025) == (15, 42, 9.000000000002046, 1)\n\n\nsource\n\n\nis_gregorian\n\n is_gregorian (year, month, day)\n\n\nsource\n\n\nis_leap_year\n\n is_leap_year (year)\n\n\nassert not is_leap_year(1800)\nassert not is_leap_year(1967)\nassert is_leap_year(2000)\nassert is_leap_year(2004)\n\nassert is_gregorian(1583, 10, 15)\nassert is_gregorian(1582, 10, 15)\nassert not is_gregorian(1582, 10, 14)\nassert not is_gregorian(1582, 9, 20)\nassert is_gregorian(1582, 11, 5)\nassert not is_gregorian(1581, 10, 20)\n\n\nsource\n\n\njulian_to_date\n\n julian_to_date (julian_day)\n\nConversion from Julian day to Calendar date.\n\nsource\n\n\ndate_to_julian\n\n date_to_julian (year, month, day)\n\nConversion from Calendar date to Julian day (note that the day can be expressed in decimal with dms_to_decimal)).\n\nassert date_to_julian(2010, 1, 1) == 2455197.5\nassert julian_to_date(2455197.5) == (2010, 1, 1)\nassert date_to_julian(-64, 7, 18) == 1697880.5\nassert julian_to_date(1697880.5) == (-64, 7, 18)\n\n\nsource\n\n\nday_into_year_to_date\n\n day_into_year_to_date (year, days)\n\n\nsource\n\n\nday_into_year\n\n day_into_year (year, month, day)\n\n\nassert day_into_year(2005, 3, 9) == 68\nassert day_into_year(2000, 3, 9) == 69  # Leap year, one more day passed on that date\nassert day_into_year_to_date(2000, 69) == (2000, 3, 9)  # Leap year, one more day passed on that date\nassert day_into_year_to_date(2005, 68) == (2005, 3, 9)  # Leap year, one more day passed on that date\n\n\nsource\n\n\nday_of_week\n\n day_of_week (year, month, day)\n\nGives back which day was the given date. 0: sunday, 1: monday, …\n\nassert day_of_week(1985, 2, 7) == 4  # The 2nd of February 1985 was a Thursday\n\n\nsource\n\n\nut_to_lct\n\n ut_to_lct (hour, minute, second, timezone, daylight_saving_time=False)\n\nUniversal time to local civil time\n\nsource\n\n\nlct_to_ut\n\n lct_to_ut (hour, minute, second, timezone, daylight_saving_time=False)\n\nLocal civil time to universal time\n\nassert lct_to_ut(18,0,0,\"est\") == (23, 0, 0.0, 1)\nassert lct_to_ut(18,0,0,\"cet\") == (17, 0, 0.0, 1)\nassert lct_to_ut(23,0,0,\"est\") == (4, 0, 0.0, 1)\nassert lct_to_ut(0,0,0,\"cet\") == (23, 0, 0.0, 1)\nassert lct_to_ut(0,0,0,\"cet\", daylight_saving_time=True) == (22, 0, 0.0, 1)\n\nassert ut_to_lct(23,0,0,\"est\") == (18, 0, 0.0, 1)\nassert ut_to_lct(17,0,0,\"cet\") == (18, 0, 0.0, 1)\nassert ut_to_lct(4,0,0,\"est\") == (23, 0, 0.0, 1)\nassert ut_to_lct(23,0,0,\"cet\") == (0, 0, 0.0, 1)\nassert ut_to_lct(22,0,0,\"cet\", daylight_saving_time=True) == (0, 0, 0.0, 1)\n\n\nsource\n\n\nlct_to_ut\n\n lct_to_ut (year, month, day, hour, minute, second)\n\nGreenwitch standard time to universal time.\n\nsource\n\n\nut_to_lct\n\n ut_to_lct (year, month, day, hour, minute, second)\n\nUniversal time to Greenwitch standard time\n\nassert ut_to_lct(2010,2,7,23,30,0) == (8, 41, 53.046073785375256, 1)\nassert lct_to_ut(2010,2,7,8,41,53) == (23, 29, 59.998488992054035, 1)\n\n\nsource\n\n\nlst_to_gst\n\n lst_to_gst (hour, minute, second, longitude)\n\nlongitude: 40E is +40, 40W is -40\n\nsource\n\n\ngst_to_lst\n\n gst_to_lst (hour, minute, second, longitude)\n\nlongitude: 40E is +40, 40W is -40\n\nassert gst_to_lst(2, 3, 41, -40) == (23, 23, 40.99999999999511, 1)\nassert lst_to_gst(23, 23, 41, -40) == (2, 3, 40.999999999986585, 1)",
+    "crumbs": [
+      "conversion"
+    ]
+  }
+]
