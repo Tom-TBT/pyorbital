@@ -5,4 +5,4 @@ d = { 'settings': { 'branch': 'main',
                 'doc_host': 'https://Tom-TBT.github.io',
                 'git_url': 'https://github.com/Tom-TBT/pyorbital',
                 'lib_path': 'pyorbital'},
-  'syms': {'pyorbital.core': {'pyorbital.core.foo': ('core.html#foo', 'pyorbital/core.py')}}}
+  'syms': {'pyorbital.core': {'pyorbital.core.say_hello': ('core.html#say_hello', 'pyorbital/core.py')}}}
